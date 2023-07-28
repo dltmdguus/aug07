@@ -24,6 +24,7 @@
 		VALUES(#{id }, #{pw1 }, #{name }, #{addr }, #{birth },#{mbti }, #{gender }) 
 	</insert>
 	
+	
 	<select id="members" resultMap="join">
 		SELECT * FROM members
 	</select>
