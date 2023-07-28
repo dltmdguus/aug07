@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,11 +11,17 @@
 <link rel="icon" href="./img/favicon.ico" type="image/x-icon">
 <link rel="stylesheet" href="./css/menu.css">
 <link rel="stylesheet" href="./css/board.css">
+<script type="text/javascript">
+	function linkPage(pageNo){
+		location.href = "./board?pageNo="+pageNo;
+	}	
+</script>
 </head>
 <body>
 <%@ include file="menu.jsp" %>
 	<h1>보드</h1>
 	<%-- 길이 검사 : ${fn:length(list) } --%>
+	
 	<c:choose>
 		<c:when test="${fn:length(list) gt 0 }">
 		<table>
@@ -36,6 +43,9 @@
 			</tr>
 		</c:forEach>
 	</table>
+	<div class="page">
+	<ui:pagination paginationInfo = "${paginationInfo}" type="image" jsFunction="linkPage"/>
+	</div>
 		</c:when>
 		<c:otherwise><h1>출력할 데이터가 없습니다.</h1></c:otherwise>
 	</c:choose>

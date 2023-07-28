@@ -1,13 +1,17 @@
-package com.poseidon.pro1;
+package com.poseidon.service;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.poseidon.dao.BoardDAO;
+import com.poseidon.dto.BoardDTO;
+import com.poseidon.dto.PageDTO;
+import com.poseidon.util.Util;
 
 @Service("boardService")
 public class BoardService {
@@ -20,8 +24,8 @@ public class BoardService {
 	private Util util; //컴포넌트 Util과 연결했습니다.
 
 	// 보드 리스트 불러오는 메소드
-	public List<BoardDTO> boardList() {
-		return boardDAO.boardList();
+	public List<BoardDTO> boardList(PageDTO page) {
+		return boardDAO.boardList(page);
 	}
 
 	public BoardDTO detail(BoardDTO dto2) {
@@ -72,6 +76,11 @@ public class BoardService {
 
 	public void edit(BoardDTO dto) {
 		boardDAO.edit(dto);
+	}
+	
+	//전체 글 수 가져오기 
+	public int totalCount() {
+		return boardDAO.totalCount();
 	}
 	
 	

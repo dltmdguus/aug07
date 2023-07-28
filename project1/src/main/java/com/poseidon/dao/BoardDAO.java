@@ -1,13 +1,15 @@
-package com.poseidon.pro1;
+package com.poseidon.dao;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
+
+import com.poseidon.dto.BoardDTO;
+import com.poseidon.dto.PageDTO;
 
 //Inject 사용해보기
 
@@ -17,8 +19,8 @@ public class BoardDAO {
 	@Named("sqlSession")
 	private SqlSession sqlSession;
 	
-	public List<BoardDTO> boardList(){
-		return sqlSession.selectList("board.boardList");
+	public List<BoardDTO> boardList(PageDTO page){
+		return sqlSession.selectList("board.boardList", page);
 	}
 
 	public BoardDTO detail(BoardDTO dto2) {
@@ -40,6 +42,10 @@ public class BoardDAO {
 	public void likeUp(BoardDTO dto2) {
 		sqlSession.update("board.likeUp", dto2);
 		
+	}
+
+	public int totalCount() {
+		return sqlSession.selectOne("board.totalCount");
 	}
 	
 	

@@ -1,4 +1,7 @@
-package com.poseidon.pro1;
+package com.poseidon.controller;
+
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -7,6 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.poseidon.dto.JoinDTO;
+import com.poseidon.dto.LoginDTO;
+import com.poseidon.service.LoginService;
 
 @Controller
 public class LoginController {
@@ -66,4 +75,31 @@ public class LoginController {
 		
 	}
 	
+	@GetMapping("join")
+	public String join() {
+	return "join";
+		}
+	@PostMapping("/join")
+	public String join(JoinDTO joinDTO) {
+		System.out.println("jsp에서 오는 값 : " + joinDTO.getGender());
+		System.out.println("jsp에서 오는 값 : " + joinDTO.getBirth());
+		int result = loginService.join(joinDTO);
+		
+		System.out.println(result);
+		if(result == 1) {
+			return "redirect:/login";
+		} else {
+			return "redirect:/join";
+		}
+	}
+	//전체 회원 뽑기
+	@GetMapping("/members")
+	public ModelAndView members() {
+		ModelAndView mv = new ModelAndView("members");
+		List<JoinDTO> list = loginService.members();
+		mv.addObject("list", list);
+		return mv;
+	}
 }
+
+

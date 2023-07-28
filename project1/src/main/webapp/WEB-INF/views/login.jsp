@@ -59,6 +59,9 @@ function checkID(){
 					<button type="submit" class="login">LOGIN</button>
 					<span id="msg"></span>
 				</form>
+				
+				아이디 찾기 | 비밀번호 찾기 | <a href="./join">회원가입</a>
+				
 			</div>
 		</div>
 	</div>
