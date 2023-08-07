@@ -9,37 +9,56 @@
 	</select>
 
 	<select id="boardList" resultType="boardDTO">
-		SELECT * FROM boardview LIMIT #{firstRecordIndex }, #{recordCountPerPage }
+		SELECT * FROM boardview LIMIT
+		#{firstRecordIndex }, #{recordCountPerPage }
 	</select>
 
 	<!-- # { 변수명}을 적어주면 변수가 들어가요 -->
-	<select id="detail" parameterType="boardDTO" resultType="boardDTO">
-		SELECT * FROM boardview 
-		WHERE bno = #{bno} 
+	<select id="detail" parameterType="boardDTO"
+		resultType="boardDTO">
+		SELECT * FROM boardview
+		WHERE bno = #{bno}
 		<if test="m_id != null">
-		AND m_id=#{m_id}
+			AND m_id=#{m_id}
 		</if>
 	</select>
 
 	<!-- inert는 result가 없습니다 -->
 	<!-- 서브쿼리 : 쿼리 속에 쿼리가 들어가요 -->
 	<insert id="write" parameterType="boardDTO">
-		INSERT INTO board (btitle, bcontent, m_no, bip, uuid)
-		VALUES (#{btitle }, #{bcontent }, (SELECT m_no FROM members WHERE m_id=#{m_id}), #{bip }, #{uuid } )
+		INSERT INTO board (btitle,
+		bcontent, m_no, bip, uuid)
+		VALUES (#{btitle }, #{bcontent }, (SELECT
+		m_no FROM members WHERE m_id=#{m_id}), #{bip }, #{uuid } )
 	</insert>
 
-	<delete id="delete" parameterType="boardDTO">
-		DELETE FROM board WHERE bno=#{bno} AND m_no=(SELECT m_no FROM members WHERE m_id=#{m_id})
-	</delete>
-	
+	<update id="delete" parameterType="boardDTO">
+		UPDATE board SET bdel=0
+		WHERE bno=#{bno } AND m_no=(SELECT m_no FROM members WHERE m_id=#{m_id })
+	</update>
+
 	<update id="edit" parameterType="boardDTO">
-		UPDATE board SET btitle=#{btitle }, bcontent=#{bcontent }
+		UPDATE board SET btitle=#{btitle
+		}, bcontent=#{bcontent }
 		WHERE bno=#{bno }
 	</update>
 
 	<update id="likeUp" parameterType="boardDTO">
-		UPDATE board SET blike = blike + 1 
+		UPDATE board SET blike = blike
+		+ 1
 		WHERE bno=#{bno }
 	</update>
 
+
+	<select id="commentsList" parameterType="Integer"
+		resultType="Map">
+		SELECT * FROM commentsview WHERE bno=#{bno }
+	</select>
+
+	<update id="cdel" parameterType="Map">
+		UPDATE comments SET c_del=0
+		WHERE bno=#{bno} AND c_no=#{cno} AND m_no=(SELECT m_no FROM members WHERE
+		m_id=#{mid})
+
+	</update>
 </mapper>

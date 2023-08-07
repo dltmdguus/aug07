@@ -1,6 +1,7 @@
 package com.poseidon.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -84,7 +85,14 @@ public class BoardController {
 		//dto.setM_id(null); 글 상세보기에서는 mid가 없어도 됩니다.
 		
 		BoardDTO result = boardService.detail(dto);
+		//System.out.println(result.getCommentcount());
+		if(result.getCommentcount() > 0) {
+			//데이터베이스에 물어봐서 jsp로 보냅니다.
+			List<Map<String, Object>> commentsList = boardService.commentsList(bno);
+			model.addAttribute("commentsList", commentsList);
+		}
 		model.addAttribute("dto", result);
+		System.out.println(util.getIp()+bno);
 
 		return "detail";
 	}
@@ -187,5 +195,26 @@ public class BoardController {
 
 		return "redirect:detail?bno=" + dto.getBno(); // 보드로 이동하게 해주세요
 	}
+	  @GetMapping("/cdel") // bno, cno
+      public String cdel(@RequestParam Map<String, Object> map, HttpSession session) {
+         //로그인여부 검사
+         if(session.getAttribute("mid") != null){
+            //값 들어왔는지 여부 검사
+            if(map.get("bno") !=null && map.get("cno") !=null &&
+                  !(map.get("bno").equals("")) && !(map.get("cno").equals("")) && 
+                  util.isNum(map.get("bno")) && util.isNum(map.get("cno"))) {
+               
+               //System.out.println("여기로 들어왔습니다.");
+               map.put("mid" , session.getAttribute("mid"));
+               int result = boardService.cdel(map);
+               
+               System.out.println("삭제결과 : " + result);
+                  
+            }
+            
+         }
+         return "redirect:/detail?bno="+map.get("bno");
+      }
+
 
 }
