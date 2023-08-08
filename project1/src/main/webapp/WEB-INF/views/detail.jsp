@@ -9,7 +9,7 @@
 <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon">
 <link rel="icon" href="./img/favicon.ico" type="image/x-icon">
 <link rel="stylesheet" href="./css/menu.css">
-<link rel="stylesheet" href="./css/detail.css">
+<link rel="stylesheet" href="./css/detail.css?ver=0.2">
 <script src="./js/jquery-3.7.0.min.js"></script>
 <script type="text/javascript">
 	function edit(){
@@ -26,6 +26,9 @@
 			//http://172.30.1.19/delete?bno=150
 		}
 	}
+
+		
+	
 	//댓글 삭제 버튼 만들기 = 반드시 로그인 하고, 자신의 글인지 확인하는 검사 구문 필요
 	function cdel(cno){
 		if(confirm("댓글을 삭제하시겠습니까?")){
@@ -69,7 +72,45 @@
 		});
 		
 		
-	//댓글 수정 버튼 만들기 = 반드시 로그인 하고, 자신의 글인지 확인하는 검사 구문 필요
+		//댓글 수정 버튼 만들기 = 반드시 로그인 하고, 자신의 글인지 확인하는 검사 구문 필요.
+		// .cedit
+		$(".cedit").click(function(){
+			//alert("!");
+			// 변수만들기 bno, cno, content, 글쓰기 수정html
+			//const bno = "${dto.bno}";
+			const cno = $(this).parent().siblings(".cid").text();
+			let content = $(this).parents(".commentHead").siblings(".commentBody").text();
+			let recommentBox = '<div class="recommentBox">';
+			recommentBox = '<form action="./cedit" method="post">';
+			recommentBox += '<textarea id="rcta" name="recomment" placeholder="댓글을 입력하세요">'+content+'</textarea>';
+			recommentBox += '<input type="hidden" id="bno" name="bno" value="${dto.bno}">';
+			recommentBox += '<input type="hidden" id="cno" name="cno" value="'+cno+'">';
+			recommentBox += '<button type="submit" id="recomment">댓글수정하기</button>';
+			recommentBox += '</form>';
+			recommentBox += '</div>';
+			//alert(bno + "/" + cno + "/" + content);
+			//내 위치 찾기
+			let commentDIV = $(this).parents(".comment");
+			//commentDIV.css("color", "red");
+			commentDIV.after(recommentBox);
+			commentDIV.remove();
+			//수정, 삭제, 댓글창 열기 모두 삭제하기
+			$(".cedit").remove();
+			$(".cdel").remove();
+			$("#openComment").remove();
+		});
+		
+		//댓글쓰기 몇 글자 썼는지 확인하는 코드 2023-08-08 프레임워크 프로그래밍
+		//keyup     텍스트입력창 : #commenttextarea, 버튼 : #comment
+		$("#commenttextarea").keyup(function(){
+			let text = $(this).val();
+			if(text.length > 100){
+				alert("100자 넘었어요.");
+				$(this).val(  text.substr(0, 100)   );	
+			}
+			$("#comment").text("글쓰기 " + text.length +  "/100");
+		});
+	
 	});
 	
 	
@@ -104,7 +145,7 @@
 						<div class="commentHead">
 							<div class="cname">${c.m_name }(${c.m_id })
 							<c:if test="${sessionScope.mid ne null && sessionScope.mid eq c.m_id}">
-							<img alt="" src="./img/edit.png" onclick="cedit()">&nbsp;
+							<img alt="" src="./img/edit.png" class="cedit" onclick="cedit()">&nbsp;
 							<img alt="" src="./img/delete.png" class="cdel"onclick="cdel1(c.c_no)">
 							</c:if></div>
 							<div class="cdate">${c.c_date }</div>

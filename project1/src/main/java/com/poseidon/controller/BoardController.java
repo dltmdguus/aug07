@@ -92,7 +92,7 @@ public class BoardController {
 			model.addAttribute("commentsList", commentsList);
 		}
 		model.addAttribute("dto", result);
-		System.out.println(util.getIp()+bno);
+		//System.out.println(util.getIp()+bno);
 
 		return "detail";
 	}
@@ -216,5 +216,24 @@ public class BoardController {
          return "redirect:/detail?bno="+map.get("bno");
       }
 
+	   @PostMapping("/cedit")
+	      public String cedit(@RequestParam Map<String, Object> map, HttpSession session) {
+	         if(session.getAttribute("mid") !=null ) {
+	            if(map.get("bno") !=null && !map.get("bno").equals("") &&
+	                  map.containsKey("cno") && !map.get("cno").equals("")) {
+	               map.put("mid", session.getAttribute("mid"));
+	               System.out.println(map);
+	               int result = boardService.cedit(map);
+	               System.out.println(result);
+	               return "redirect:/detail?bno="+map.get("bno");
+	            } else {
+	               return "redirect:/board";
+	            }
+	         } else {
+	         return "redirect:/login";
+	      }
+	}
+	      
+	   
 
-}
+	}
